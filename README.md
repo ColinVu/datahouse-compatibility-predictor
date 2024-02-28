@@ -30,19 +30,35 @@ Third is endurance, which in my opinion is the most important factor among these
 Spice tolerance is certainly the odd one out, but I found some interesting research findings correlating spice tolerance with personality factors. In Personality factors predict spicy food liking and intake, authors Brynes and Hayes conclude that liking of spicy meals was strongly correlated with a sensation-seeking personality type, with an r-value of 0.50. The article can be read here: https://www.sciencedirect.com/science/article/pii/S0950329312001917. I imagine sensation seeking to be associated with an enhanced desire for unique experiences, or in other words, risk-taking. Risk-taking can be an issue in one’s personal life, say, if they lose their finances to online slot machines or if they decide to parkour atop the New York subway. But in a group project setting, it’s a huge benefit. Risk-taking leaders can drive innovation and introduce fresh ideas to a team. I also don’t think a lack of risk-taking is disqualifying, and there’s only so much benefit that more innovative ideas can add to a dynamic when there’s already so many ideas flying around. Too much and a group might not be able to move forward with one idea. If the average spice tolerance is below 5, I’ll give weighing factor of 0.75 + (0.025 * spicyFoodTolerance). If the average is between 5 and 8, inclusive, I’ll give a weighing factor of 0.9 + (0.01 * spicyFoodTolerance). If it’s above 8, I’ll give 1.0 - (0.01 * spicyFoodTolerance).
 
 TLDR:
+
 If intelligence >= 4, weigh it as 0.5 + (intelligence * 0.05)
+
 If intelligence < 4,
-If there’s an existing member with intelligence < 4, weigh it as 0.4 + (intelligence * 0.1)
-Otherwise, weigh it as 0.65
+
+    If there’s an existing member with intelligence < 4, weigh it as 0.4 + (intelligence * 0.1)
+
+    Otherwise, weigh it as 0.65
+
 For strength:
-If strength = 1, weigh it as 0.6
-If strength = 2, weigh it as 0.7
-If strength = 9, weigh it as 0.95
-If strength = 10, weigh it as 1.0
-Otherwise, use (0.025 * (strength - 2)) + 0.75
+
+    If strength = 1, weigh it as 0.6
+
+    If strength = 2, weigh it as 0.7
+
+    If strength = 9, weigh it as 0.95
+
+    If strength = 10, weigh it as 1.0
+
+    Otherwise, use (0.025 * (strength - 2)) + 0.75
+
 If average endurance < 5, weigh it as 0.5 + (endurance * 0.05)
+
 If average endurance >= 5, weigh it as  0.6 + (endurance * 0.04)
+
 If average spicyFoodTolerance < 5, weigh it as 0.75 + (0.025 * spicyFoodTolerance)
+
 If average spicyFoodTolerance > 8, weigh it as 1.0 - (0.01 * spicyFoodTolerance)
+
 Otherwise, weigh it as 0.9 + (0.01 * spicyFoodTolerance).
+
 Multiply the 4 weighing factors together to get the final compatibility score.
