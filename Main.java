@@ -47,19 +47,19 @@ public class Main
 			JSONArray teamArray = (JSONArray) initialObject.get("team");
 			JSONArray applicantArray = (JSONArray) initialObject.get("applicants");
 
-			// Let's evaluate the existing candidates to identify the needs for our group.
+			// Let's evaluate the existing team members to identify the needs for our group.
 
 			boolean hasLowIntel = false;
 			long totalEndurance = 0;
 			long totalSpiceTolerance = 0;
 
 			for (Object item : teamArray) {
-				JSONObject temp = (JSONObject)(((JSONObject)(item)).get("attributes"));
-				if ((Long)(temp.get("intelligence")) < 4.0) {
-					hasLowIntel = true;
+				JSONObject attributes = (JSONObject)(((JSONObject)(item)).get("attributes")); // Here's the JSONObject containing the attributes of each team member.
+				if ((Long)(attributes.get("intelligence")) < 4.0) {
+					hasLowIntel = true; // Indicating if there already exists a member in the group with low "intelligence."
 				}
-				totalEndurance += (Long)(temp.get("endurance"));
-				totalSpiceTolerance += (Long)(temp.get("spicyFoodTolerance"));
+				totalEndurance += (Long)(attributes.get("endurance")); // The cumulative endurance of the team
+				totalSpiceTolerance += (Long)(attributes.get("spicyFoodTolerance")); // The cumulative spice tolerance of the team
 			}
 
 			// We now know the current needs of the group. Let's see how the new applicants compare to that.
@@ -72,8 +72,10 @@ public class Main
 				double enduranceScore = 1.0;
 				double spiceScore = 1.0;
 
-				JSONObject temp = (JSONObject)(((JSONObject)(item)).get("attributes"));
-				double curr = ((Long)(temp.get("intelligence"))).doubleValue();
+				JSONObject attributes = (JSONObject)(((JSONObject)(item)).get("attributes")); // JSONObjet containing attributes of each team member.
+
+				double curr = ((Long)(attributes.get("intelligence"))).doubleValue(); // curr stores the current statistic being analyzed.
+
 				if (curr >= 4.0) {
 					intelScore = 0.5 + (curr * 0.05);
 				} else {
@@ -82,9 +84,9 @@ public class Main
 					} else {
 						intelScore = 0.65;
 					}
-				}
+				} // Algorithm for determining the weighing factor for intelligence.
 
-				curr = ((Long)(temp.get("strength"))).doubleValue();
+				curr = ((Long)(attributes.get("strength"))).doubleValue();
 				if (curr < 1.5) {
 					strengthScore = 0.6;
 				} else if (curr < 2.5) {
@@ -95,29 +97,29 @@ public class Main
 					strengthScore = 0.95;
 				} else {
 					strengthScore = 0.75 + (0.025 * (curr - 2.0));
-				}
+				} // Algorithm for determining the weighing factor for strength.
 
-				curr = ((Long)(temp.get("endurance"))).doubleValue();
+				curr = ((Long)(attributes.get("endurance"))).doubleValue();
 				if ((double)totalEndurance / (double)(teamArray.size()) < 5.0) {
 					enduranceScore = 0.5 + (curr * 0.05);
 				} else {
 					enduranceScore = 0.6 + (curr * 0.04);
-				}
+				} // Algorithm for determining the weighing factor for endurance.
 
-				curr = ((Long)(temp.get("spicyFoodTolerance"))).doubleValue();
+				curr = ((Long)(attributes.get("spicyFoodTolerance"))).doubleValue();
 				if ((double)totalSpiceTolerance / (double)(teamArray.size()) < 5.0) {
 					spiceScore = 0.75 + (curr * 0.025);
 				} else if ((double)totalSpiceTolerance / (double)(teamArray.size()) > 8.0) {
 					spiceScore = 1.0 - (curr * 0.01);
 				} else {
 					spiceScore = 0.9 + (curr * 0.01);
-				}
+				} // Algorithm for determining the weighing factor for spicy food tolerance.
 
 				objectScore = intelScore * strengthScore * enduranceScore * spiceScore;
 				if (objectScore >= 1.0) {
 					objectScore = 0.999;
-				}
-				objectScore = (double)((int)(objectScore * 1000.0)) / 1000.0;
+				} // Preventing an edge case where objectScore is greater than 1.
+				objectScore = (double)((int)(objectScore * 1000.0)) / 1000.0; // Truncating objectScore to 3 significant figures.
 				newObject.put("name", ((JSONObject)(item)).get("name"));
 				newObject.put("score", objectScore);
 				scoredApplicants.add(newObject);
